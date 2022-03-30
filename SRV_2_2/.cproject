@@ -52,8 +52,8 @@
 									<listOptionValue builtIn="false" value="${CCS_BASE_ROOT}/msp430/include"/>
 									<listOptionValue builtIn="false" value="${PROJECT_ROOT}"/>
 									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/drivers"/>
-									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/FreeRTOS_source/include"/>
-									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/FreeRTOS_source/portable/CCS/MSP430X"/>
+									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/../common/FreeRTOS_source/include"/>
+									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/../common/FreeRTOS_source/portable/CCS/MSP430X"/>
 									<listOptionValue builtIn="false" value="${PROJECT_ROOT}"/>
 									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/drivers/MSP430F5xx_6xx"/>
 									<listOptionValue builtIn="false" value="${CG_TOOL_ROOT}/include"/>
