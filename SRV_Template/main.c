@@ -19,7 +19,7 @@
 #include "msp430.h"
 
 /* User's includes */
-#include "../common/ETF5529_HAL/hal_ETF_5529.h"
+#include "ETF5529_HAL/hal_ETF_5529.h"
 
 /** delay used for task synchronization */
 #define mainTASK_SYNC_DELAY     ( pdMS_TO_TICKS( 100 ) )		// ( ( ( TickType_t ) 100 ) / portTICK_PERIOD_MS )

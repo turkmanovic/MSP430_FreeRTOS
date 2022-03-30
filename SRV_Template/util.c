@@ -19,7 +19,7 @@
 #include "msp430.h"
 
 /* User's includes */
-#include "../common/ETF5529_HAL/hal_ETF_5529.h"
+#include "ETF5529_HAL/hal_ETF_5529.h"
 
 /**
  * @brief Tick hook
