@@ -22,7 +22,7 @@
 #include "msp430.h"
 
 /* User include */
-#include "ETF5529_HAL/hal_ETF_5529.h"
+#include "../common/ETF5529_HAL/hal_ETF_5529.h"
 
 /** Task 1 Priority */
 #define mainTAKS_1_PRIO        ( 2 )
