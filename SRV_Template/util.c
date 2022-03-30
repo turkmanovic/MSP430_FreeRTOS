@@ -8,7 +8,6 @@
  */
 
 /* Standard includes. */
-#include "../../common/ETF5529_HAL/hal_ETF_5529.h"
 #include <stdio.h>
 
 /* FreeRTOS includes. */

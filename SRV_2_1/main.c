@@ -1,13 +1,9 @@
 /**
  * @file    main.c
- * @author  Haris Turkmanovic(haris@etf.rs), Strahinja Jankovic (jankovics@etf.bg.ac.rs)
+ * @author  Haris Turkmanovic(haris@etf.rs)
  * @date    2021
  * @brief   SRV Zadatak 3
  *
- *
- * @version [2.0 @ 03/2019] Platform changed to MSP430F5529
- * @version [1.1 @ 03/2019] Code refactor
- * @version [1.0 @ 03/2016] Initial version
  */
 
 /* Standard includes. */

@@ -5,7 +5,6 @@
  * @brief   SRV Zadatak 3.1
  *
  *
- * @version [1.0 @ 03/2022] Initial version
  */
 
 /* Standard includes. */
