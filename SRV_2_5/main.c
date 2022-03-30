@@ -2,7 +2,7 @@
  * @file    main.c
  * @author  Haris Turkmanovic(haris@etf.rs)
  * @date    2021
- * @brief   SRV Zadatak 8
+ * @brief   SRV Zadatak 9
  *
  */
 
@@ -21,76 +21,43 @@
 /* User's includes */
 #include "../common/ETF5529_HAL/hal_ETF_5529.h"
 
-/* User configuration*/
-#define mainMAX_COUNTING_VALUE      9
-
 /* Task priorities */
 /** "Button task" priority */
-#define mainBUTTON_TASK_PRIO        ( 1 )
-/** "Counting task" Priority */
-#define mainCOUNTING_TASK_PRIO      ( 2 )
+#define mainBUTTON_TASK_PRIO        ( 2 )
 /** "LE Diode task" Priority */
-#define mainLED_TASK_PRIO           ( 3 )
+#define mainLED_TASK_PRIO           ( 1 )
 
 static void prvSetupHardware( void );
 
-/*This semaphore whill be used to signal "Button press" event*/
-xSemaphoreHandle    xEvent_ButtonPressed;
-xSemaphoreHandle    xEvent_Counting;
+
+/*This semaphore will be used to signal "Button press" event*/
+xSemaphoreHandle    xEvent_Button;
+/*This semaphore will be used to signal "Change diode state" event*/
+xSemaphoreHandle    xEvent_PrintUserString;
 
 /**
  * @brief "Button Task" Function
  *
- * This task detect button press event and signal it to the other task
- * Thought binary semaphore
+ * This task waits for xEvent_Button semaphore to be given from
+ * port ISR. After that, simple debauncing is performed in order
+ * to verify that button is still pressed
  */
 static void prvButtonTaskFunction( void *pvParameters )
 {
     uint16_t i;
     /*Initial button states are 1 because of pull-up configuration*/
-    uint8_t     previousButtonState = 1;
     uint8_t     currentButtonState  = 1;
     for ( ;; )
     {
-        /*Read button state*/
+        xSemaphoreTake(xEvent_Button,portMAX_DELAY);
+        /*wait for a little to check that button is still pressed*/
+        for(i = 0; i < 1000; i++);
+        /*take button state*/
         currentButtonState = ((P1IN & 0x10) >> 4);
-        /*Detected button signal edge*/
-        if( previousButtonState != currentButtonState){
-            for(i = 0; i < 1000; i++);
-            /*read button state again to verify rising edge of button signal*/
-            currentButtonState = ((P1IN & 0x10) >> 4);
-            previousButtonState = currentButtonState;
-            if(currentButtonState == 0){
-                /* If button is still pressed toggle diode LD3 */
-                xSemaphoreGive(xEvent_ButtonPressed);
-            }
+        if(currentButtonState == 0){
+            /* If button is still pressed send signal to "Diode" task */
+            xSemaphoreGive(xEvent_PrintUserString);
         }
-    }
-}
-/**
- * @brief "Button Task" Function
- *
- * This task detect button press event and signal it to the other task
- * Thought binary semaphore
- */
-static void prvCountingTaskFunction( void *pvParameters )
-{
-    uint16_t i;
-    /*Init counter value to 0*/
-    uint8_t     counter = 0;
-    for ( ;; )
-    {
-        /*Wait on "Counting" event*/
-        xSemaphoreTake(xEvent_ButtonPressed, portMAX_DELAY);
-        if(counter == mainMAX_COUNTING_VALUE){
-            /* if counting value reached, */
-            counter = 0;
-            xSemaphoreGive(xEvent_Counting);
-        }
-        else{
-            counter +=1;
-        }
-        vHAL7SEGWriteDigit(counter);
     }
 }
 /**
@@ -103,8 +70,8 @@ static void prvLEDTaskFunction( void *pvParameters )
     uint16_t i;
     for ( ;; )
     {
-        /*Wait on "Counting" event*/
-        xSemaphoreTake(xEvent_Counting, portMAX_DELAY);
+        /*Wait on event*/
+        xSemaphoreTake(xEvent_PrintUserString, portMAX_DELAY);
         halTOGGLE_LED( LED3 );
     }
 }
@@ -125,13 +92,6 @@ void main( void )
                  mainBUTTON_TASK_PRIO,
                  NULL
                );
-    xTaskCreate( prvCountingTaskFunction,
-                 "Button Task",
-                 configMINIMAL_STACK_SIZE,
-                 NULL,
-                 mainBUTTON_TASK_PRIO,
-                 NULL
-               );
     xTaskCreate( prvLEDTaskFunction,
                  "LED Task",
                  configMINIMAL_STACK_SIZE,
@@ -141,8 +101,8 @@ void main( void )
                );
     /*Create FreeRTOS objects*/
     /*Create semaphores*/
-    xEvent_ButtonPressed    =   xSemaphoreCreateBinary();
-    xEvent_Counting         =   xSemaphoreCreateBinary();
+    xEvent_Button           =   xSemaphoreCreateBinary();
+    xEvent_PrintUserString            =   xSemaphoreCreateBinary();
     /* Start the scheduler. */
     vTaskStartScheduler();
 
@@ -165,16 +125,35 @@ static void prvSetupHardware( void )
 
     hal430SetSystemClock( configCPU_CLOCK_HZ, configLFXT_CLOCK_HZ );
 
-    /* Init buttons */
+    /* - Init buttons - */
+    /*Set direction to input*/
     P1DIR &= ~0x30;
+    /*Enable pull-up resistor*/
     P1REN |= 0x30;
     P1OUT |= 0x30;
+    /*Enable interrupt for pin connected to S3*/
+    P1IE  |= 0x10;
+    P1IFG &=~0x10;
+    /*Interrupt is generated during high to low transition*/
+    P1IES |= 0x10;
 
     /* initialize LEDs */
     vHALInitLED();
-    /* init 7seg*/
-    vHAL7SEGInit();
-    /*left only one display*/
-    HAL_7SEG_DISPLAY_2_OFF;
+    /*enable global interrupts*/
+    taskENABLE_INTERRUPTS();
 }
+void __attribute__ ( ( interrupt( PORT1_VECTOR  ) ) ) vPORT1ISR( void )
+{
+    BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
+    /* Give semaphore if button SW3 is pressed*/
+    /* Note: This check is not truly necessary but it is good to
+     * have it*/
+    if((P1IFG & 0x10) == 0x10){
+        xSemaphoreGiveFromISR(xEvent_Button, &xHigherPriorityTaskWoken);
+    }
+    /*Clear IFG register on exit. Read more about it in official MSP430F5529 documentation*/
+    P1IFG &=~0x10;
+    /* trigger scheduler if higher priority task is woken */
+    portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
+}
