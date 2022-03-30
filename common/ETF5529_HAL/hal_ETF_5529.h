@@ -12,6 +12,7 @@ in order to use MSP-EXP430F5438 HAL.
 #include "msp430.h"
 #include "hal_board.h"
 #include "hal_led.h"
+#include "hal_7seg.h"
 #include "../drivers/MSP430F5xx_6xx/pmm.h"
 #include "../drivers/MSP430F5xx_6xx/ucs.h"
 
