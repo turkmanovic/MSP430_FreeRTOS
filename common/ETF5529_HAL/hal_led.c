@@ -5,7 +5,7 @@
  * @brief   LED API
  */
 
-#include <ETF5529_HAL/hal_led.h>
+#include "hal_led.h"
 #include "msp430.h"
 
 void vHALInitLED( void )

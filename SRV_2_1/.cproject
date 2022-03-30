@@ -56,7 +56,6 @@
 									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/FreeRTOS_source/portable/CCS/MSP430X"/>
 									<listOptionValue builtIn="false" value="${PROJECT_ROOT}"/>
 									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/drivers/MSP430F5xx_6xx"/>
-									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/../common/ETF5529_HAL"/>
 									<listOptionValue builtIn="false" value="${CG_TOOL_ROOT}/include"/>
 								</option>
 								<option id="com.ti.ccstudio.buildDefinitions.MSP430_20.2.compilerID.ADVICE__POWER.1148818710" name="Enable checking of ULP power rules (--advice:power)" superClass="com.ti.ccstudio.buildDefinitions.MSP430_20.2.compilerID.ADVICE__POWER" useByScannerDiscovery="false" value="all" valueType="string"/>

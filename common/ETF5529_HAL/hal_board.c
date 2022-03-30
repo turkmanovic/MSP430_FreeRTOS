@@ -3,7 +3,7 @@
  *
  * Copyright 2010 Texas Instruments, Inc.
 ******************************************************************************/
-#include <ETF5529_HAL/hal_ETF_5529.h>
+#include "hal_ETF_5529.h"
 #include "msp430.h"
 
 
