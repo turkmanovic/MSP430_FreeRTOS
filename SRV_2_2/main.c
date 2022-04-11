@@ -45,22 +45,22 @@ static void prvTask1Function( void *pvParameters )
     {
         switch(xCurrentActiveDisplay){
             case HAL_DISPLAY_1:
-                HAL_7SEG_DISPLAY_1_OFF;
-                HAL_7SEG_DISPLAY_2_ON;
-                /* Extract first digit from number*/
-                xSecondDigit = data / 10;
-                /* Show digit on previously enabled display*/
-                vHAL7SEGWriteDigit(xSecondDigit);
-                /* Change active display*/
-                xCurrentActiveDisplay = HAL_DISPLAY_2;
-                break;
-            case HAL_DISPLAY_2:
                 HAL_7SEG_DISPLAY_1_ON;
                 HAL_7SEG_DISPLAY_2_OFF;
                 /* Extract first digit from number*/
                 xFirstDigit    = data - xSecondDigit*10;
                 /* Show digit on previously enabled display*/
                 vHAL7SEGWriteDigit(xFirstDigit);
+                /* Change active display*/
+                xCurrentActiveDisplay = HAL_DISPLAY_2;
+                break;
+            case HAL_DISPLAY_2:
+                HAL_7SEG_DISPLAY_1_OFF;
+                HAL_7SEG_DISPLAY_2_ON;
+                /* Extract first digit from number*/
+                xSecondDigit = data / 10;
+                /* Show digit on previously enabled display*/
+                vHAL7SEGWriteDigit(xSecondDigit);
                 /* Change active display*/
                 xCurrentActiveDisplay = HAL_DISPLAY_1;
                 break;
