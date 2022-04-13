@@ -30,8 +30,8 @@
 /* Diode Timer Period */
 #define mainDIODE_CHANGE_STATE_PERIOD_MS    500
 
-/* This handle will be used as Button task instance*/
-TaskHandle_t        xButtonTaskHandle;
+/*This Semaphore will be used to signal potential "Button press" event*/
+xSemaphoreHandle    xEvent_Button;
 
 /* Software Timer handler*/
 TimerHandle_t       xDiodeTimer;
@@ -41,11 +41,14 @@ uint8_t             xActiveDiode;
 
 static void prvSetupHardware( void );
 
+
 /**
  * @brief "Button Task" Function
  *
- * This task waits for ISR notification after which it realizes a debugging and
- * change active diode
+ * This task waits for xEvent_Button semaphore to be given from
+ * port ISR. After that, simple debauncing is performed in order
+ * to verify that button is still pressed. If button is still pressed
+ * start timer
  */
 static void prvButtonTaskFunction( void *pvParameters )
 {
@@ -56,8 +59,8 @@ static void prvButtonTaskFunction( void *pvParameters )
     {
         /* Before we blocked this task, start time */
         xTimerStart(xDiodeTimer,portMAX_DELAY);
-        /* waits for notification from ISR*/
-        ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+        /* waits for semaphore to be released from ISR*/
+        xSemaphoreTake(xEvent_Button,portMAX_DELAY);
         /*wait for a little to check that button is still pressed*/
         for(i = 0; i < 1000; i++);
         /*take button state*/
@@ -96,7 +99,7 @@ void main( void )
                  configMINIMAL_STACK_SIZE,
                  NULL,
                  mainBUTTON_TASK_PRIO,
-                 &xButtonTaskHandle
+                 NULL
                );
     /* Create timer */
     xDiodeTimer         = xTimerCreate("Diode timer",
@@ -104,6 +107,8 @@ void main( void )
                                        pdTRUE,
                                        NULL,
                                        prvDiodeTimerCallback);
+    /*Create semaphores*/
+    xEvent_Button           =   xSemaphoreCreateBinary();
     /* Start the scheduler. */
     vTaskStartScheduler();
 
@@ -152,9 +157,9 @@ void __attribute__ ( ( interrupt( PORT1_VECTOR  ) ) ) vPORT1ISR( void )
     /* Note: This check is not truly necessary but it is good to
      * have it*/
     if((P1IFG & 0x10) == 0x10){
-        vTaskNotifyGiveFromISR(xButtonTaskHandle, &xHigherPriorityTaskWoken);
+        xSemaphoreGiveFromISR(xEvent_Button, &xHigherPriorityTaskWoken);
     }
-    /*Clear IFG register on exit. Read more about it in offical MSP430F5529 documentation*/
+    /*Clear IFG register on exit. Read more about it in official MSP430F5529 documentation*/
     P1IFG &=~0x10;
     /* trigger scheduler if higher priority task is woken */
     portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
