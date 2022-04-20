@@ -54,7 +54,6 @@ volatile button_t   xPressedButton;
 
 static void prvSetupHardware( void );
 
-
 /**
  * @brief "Button Task" Function
  *
@@ -137,6 +136,10 @@ void main( void )
                                        prvDiodeTimerCallback);
     /*Create semaphores*/
     xEvent_Button           =   xSemaphoreCreateBinary();
+
+    taskDISABLE_INTERRUPTS();
+
+    taskENABLE_INTERRUPTS();
 
     /* Start timer with initial period */
     xTimerStart(xDiodeTimer,portMAX_DELAY);

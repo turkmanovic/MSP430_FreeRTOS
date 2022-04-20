@@ -73,7 +73,7 @@ static void prvButtonTaskFunction( void *pvParameters )
              * we stop timer */
             xTimerStop(xDiodeTimer, portMAX_DELAY);
             /* Change active diode */
-            xActiveDiode = xActiveDiode == LED3? LED4 : LED3;
+            xActiveDiode = xActiveDiode == LED3 ? LED4 : LED3;
         }
     }
 }
@@ -109,6 +109,8 @@ void main( void )
                                        prvDiodeTimerCallback);
     /*Create semaphores*/
     xEvent_Button           =   xSemaphoreCreateBinary();
+    /* Set user variables */
+    xActiveDiode    = LED3;
     /* Start the scheduler. */
     vTaskStartScheduler();
 
@@ -142,8 +144,6 @@ static void prvSetupHardware( void )
     P1IFG &=~0x10;
     /*Interrupt is generated during high to low transition*/
     P1IES |= 0x10;
-
-    xActiveDiode    = LED3;
     /* initialize LEDs */
     vHALInitLED();
     /*enable global interrupts*/

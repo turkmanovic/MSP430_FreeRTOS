@@ -2,7 +2,7 @@
  * @file    main.c
  * @author  Haris Turkmanovic(haris@etf.rs)
  * @date    2021
- * @brief   SRV Zadatak 13
+ * @brief   SRV Zadatak 16
  *
  */
 
