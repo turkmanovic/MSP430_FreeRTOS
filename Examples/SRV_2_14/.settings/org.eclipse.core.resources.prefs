@@ -1,12 +1,6 @@
 eclipse.preferences.version=1
 encoding//Debug/ETF5529_HAL/subdir_rules.mk=UTF-8
 encoding//Debug/ETF5529_HAL/subdir_vars.mk=UTF-8
-encoding//Debug/FreeRTOS_Source/portable/CCS/MSP430X/subdir_rules.mk=UTF-8
-encoding//Debug/FreeRTOS_Source/portable/CCS/MSP430X/subdir_vars.mk=UTF-8
-encoding//Debug/FreeRTOS_Source/portable/MemMang/subdir_rules.mk=UTF-8
-encoding//Debug/FreeRTOS_Source/portable/MemMang/subdir_vars.mk=UTF-8
-encoding//Debug/FreeRTOS_Source/subdir_rules.mk=UTF-8
-encoding//Debug/FreeRTOS_Source/subdir_vars.mk=UTF-8
 encoding//Debug/FreeRTOS_source/portable/CCS/MSP430X/subdir_rules.mk=UTF-8
 encoding//Debug/FreeRTOS_source/portable/CCS/MSP430X/subdir_vars.mk=UTF-8
 encoding//Debug/FreeRTOS_source/portable/MemMang/subdir_rules.mk=UTF-8

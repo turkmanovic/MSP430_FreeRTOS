@@ -179,14 +179,13 @@ static void prvSetupHardware( void )
     P1IES |= 0x10;
 
     /* Initialize UART */
-
-     P4SEL       |= BIT4+BIT5;                    // P4.4,5 = USCI_AA TXD/RXD
-     UCA1CTL1    |= UCSWRST;                      // **Put state machine in reset**
-     UCA1CTL1    |= UCSSEL_2;                     // SMCLK
-     UCA1BRW      = 1041;                         // 1MHz - Baudrate 9600
-     UCA1MCTL    |= UCBRS_6 + UCBRF_0;            // Modulation UCBRSx=1, UCBRFx=0
-     UCA1CTL1    &= ~UCSWRST;                     // **Initialize USCI state machine**
-     UCA1IE      |= UCRXIE;                       // Enable USCI_A1 RX interrupt
+    P4SEL       |= BIT4+BIT5;                    // P4.4,5 = USCI_AA TXD/RXD
+    UCA1CTL1    |= UCSWRST;                      // **Put state machine in reset**
+    UCA1CTL1    |= UCSSEL_2;                     // SMCLK
+    UCA1BRW      = 1041;                         // 1MHz - Baudrate 9600
+    UCA1MCTL    |= UCBRS_6 + UCBRF_0;            // Modulation UCBRSx=1, UCBRFx=0
+    UCA1CTL1    &= ~UCSWRST;                     // **Initialize USCI state machine**
+    UCA1IE      |= UCRXIE;                       // Enable USCI_A1 RX interrupt
 
     /* initialize LEDs */
     vHALInitLED();
